@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: qa1-scielo-br-svc
+  namespace: qa1-scielo-br
+  labels:
+    app: qa1-scielo-br
+spec:
+  ports:
+    - name: webapp
+      port: 8000
+      protocol: TCP
+      nodePort: 32642
+  selector:
+    app: qa1-scielo-br
+  type: NodePort
