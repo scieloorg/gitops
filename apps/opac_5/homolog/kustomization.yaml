@@ -9,4 +9,4 @@ resources:
 images:
   - name: infrascielo/opac_5
     newName: infrascielo/opac_5
-    digest: sha256:8c03bf1ae0f696f8eb9f1313967e512eb01690c8dbd4b9b218beb0e74442e52b
+    digest: sha256:4286b67d3da1582bf20bf6f8ba2cc16d64c92a33c317daa34acb4943019aa2a4
