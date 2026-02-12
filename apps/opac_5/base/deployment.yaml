@@ -29,9 +29,9 @@ spec:
         image: infrascielo/opac_5   # digest vem do kustomize
         imagePullPolicy: IfNotPresent
 
-        securityContext:
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
+#        securityContext:
+#          runAsNonRoot: true
+#          allowPrivilegeEscalation: false
 
         ports:
         - containerPort: 8000
