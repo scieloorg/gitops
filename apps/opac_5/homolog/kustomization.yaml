@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - ../base
 
+namespace: qa1-scielo-br
+
 namePrefix: qa1-
 
 replicas:
@@ -15,6 +17,7 @@ images:
     newName: infrascielo/opac_5
     digest: sha256:41d47d14c98e5b8d636a455ac12090985f7b81b916b0d4b1464d502cb8def5e5
 
+# JSON patch só para Service
 patches:
   - target:
       kind: Service
@@ -24,26 +27,6 @@ patches:
         path: /spec/ports/0/nodePort
         value: 32642
 
-      kind: Deployment
-      name: scielo-app
-    patch: |
-      # adiciona envFrom (não existe no base)
-      - op: add
-        path: /spec/template/spec/containers/0/envFrom
-        value:
-          - secretRef:
-              name: secrets-qa1-scielo-br
-
-      # tolerations não existem no base → add
-      - op: add
-        path: /spec/template/spec/tolerations
-        value:
-          - key: app
-            operator: Equal
-            value: homologacao
-            effect: NoSchedule
-
-      # troca PVC placeholder
-      - op: replace
-        path: /spec/template/spec/volumes/0/persistentVolumeClaim/claimName
-        value: qa1-scielo-br-data-pvc
+# Strategic merge para Deployment
+patchesStrategicMerge:
+  - patch-deployment.yaml
