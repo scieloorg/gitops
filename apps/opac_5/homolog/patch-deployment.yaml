@@ -9,7 +9,7 @@ spec:
       containers:
       - name: webapp
         envFrom:
-        - secretRef:
+        - configMapRef:
             name: secrets-qa1-scielo-br
 
       tolerations:
