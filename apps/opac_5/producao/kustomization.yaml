@@ -1,49 +1,57 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+# usa base comum
 resources:
   - ../base
 
-namePrefix: qa1-
+# namespace de produção
+namespace: scielo-pf
 
+# replicas de produção
 replicas:
   - name: scielo-app
-    count: 1
+    count: 9
 
+# imagem com digest (CI atualiza)
 images:
   - name: infrascielo/opac_5
     newName: infrascielo/opac_5
-    digest: sha256:41d47d14c98e5b8d636a455ac12090985f7b81b916b0d4b1464d502cb8def5e5
+    digest: sha256:8c03bf1ae0f696f8eb9f1313967e512eb01690c8dbd4b9b218beb0e74442e52b
 
+# patches específicos de produção
 patches:
+  # Deployment
+  - target:
+      kind: Deployment
+      name: scielo-app
+    patch: |
+      # adiciona secret
+      - op: add
+        path: /spec/template/spec/containers/0/envFrom
+        value:
+          - secretRef:
+              name: secrets-scielo-pf
+
+      # tolerations de produção
+      - op: add
+        path: /spec/template/spec/tolerations
+        value:
+          - key: app
+            operator: Equal
+            value: scielo-pf
+            effect: NoSchedule
+
+      # PVC de produção
+      - op: replace
+        path: /spec/template/spec/volumes/0/persistentVolumeClaim/claimName
+        value: scielo-pf-data-pvc
+
+  # Service
   - target:
       kind: Service
       name: scielo-app-svc
     patch: |
       - op: replace
         path: /spec/ports/0/nodePort
-        value: 32642
-
-      kind: Deployment
-      name: scielo-app
-    patch: |
-      # adiciona envFrom (não existe no base)
-      - op: add
-        path: /spec/template/spec/containers/0/envFrom
-        value:
-          - secretRef:
-              name: secrets-qa1-scielo-br
-
-      # tolerations não existem no base → add
-      - op: add
-        path: /spec/template/spec/tolerations
-        value:
-          - key: app
-            operator: Equal
-            value: homologacao
-            effect: NoSchedule
-
-      # troca PVC placeholder
-      - op: replace
-        path: /spec/template/spec/volumes/0/persistentVolumeClaim/claimName
-        value: qa1-scielo-br-data-pvc
+        value: 32641

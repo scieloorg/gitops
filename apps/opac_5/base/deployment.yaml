@@ -1,46 +1,59 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: qa1-scielo-br
+  name: scielo-app
   labels:
-    app: qa1-scielo-br
+    app: scielo-app
+
 spec:
-  replicas: 1
   revisionHistoryLimit: 5
+
   selector:
     matchLabels:
-      app: qa1-scielo-br
+      app: scielo-app
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 33%
+      maxUnavailable: 1
+
   template:
     metadata:
       labels:
-        app: qa1-scielo-br
+        app: scielo-app
+
     spec:
       containers:
-      - image: infrascielo/opac_5
-        imagePullPolicy: Always
-        name: webapp
-        securityContext: 
-          privileged: true
-        envFrom:
-        - configMapRef:
-            name: secrets-qa1-scielo-br
+      - name: webapp
+        image: infrascielo/opac_5   # digest vem do kustomize
+        imagePullPolicy: IfNotPresent
+
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+
         ports:
         - containerPort: 8000
           name: webapp
+
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
         volumeMounts:
-        - name: qa1-scielo-br-data
+        - name: app-data
           mountPath: /app/data
-      tolerations:
-      - effect: NoSchedule
-        key: app
-        operator: Equal
-        value: homologacao
+
       volumes:
-      - name: qa1-scielo-br-data
+      - name: app-data
         persistentVolumeClaim:
-          claimName: qa1-scielo-br-data-pvc
+          claimName: placeholder-pvc
