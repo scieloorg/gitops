@@ -23,7 +23,7 @@ patches:
     patch: |
       - op: replace
         path: /spec/ports/0/nodePort
-        value: 32645
+        value: 32643
 
 # Strategic merge para Deployment
 patchesStrategicMerge:
