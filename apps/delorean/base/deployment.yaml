@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delorean-app
+  labels:
+    app: delorean-app
+
+spec:
+  revisionHistoryLimit: 5
+
+  selector:
+    matchLabels:
+      app: delorean-app
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+
+  template:
+    metadata:
+      labels:
+        app: delorean-app
+
+    spec:
+      containers:
+      - name: webapp
+        image: infrascielo/delorean   # digest vem do kustomize
+        imagePullPolicy: IfNotPresent
+
+#        securityContext:
+#          runAsNonRoot: true
+#          allowPrivilegeEscalation: false
+
+        ports:
+        - containerPort: 6543
+          name: webapp
+
+        readinessProbe:
+          tcpSocket:
+            port: 6543
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 6543
+          initialDelaySeconds: 15
+          periodSeconds: 20

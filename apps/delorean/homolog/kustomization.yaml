@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../base
+
+namespace: hml-delorean
+
+replicas:
+  - name: delorean-app
+    count: 1
+
+images:
+  - name: infrascielo/delorean
+    newName: infrascielo/delorean
+    digest: sha256:41d47d14c98e5b8d636a455ac12090985f7b81b916b0d4b1464d502cb8def5e5
+
+# JSON patch só para Service
+patches:
+  - target:
+      kind: Service
+      name: delorean-app-svc
+    patch: |
+      - op: replace
+        path: /spec/ports/0/nodePort
+        value: 32645
+
+# Strategic merge para Deployment
+patchesStrategicMerge:
+  - patch-deployment.yaml
