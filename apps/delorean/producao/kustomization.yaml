@@ -21,20 +21,6 @@ images:
 
 # patches específicos de produção
 patches:
-  # Deployment
-  - target:
-      kind: Deployment
-      name: delorean-app
-    patch: |
-      # tolerations de produção
-      - op: add
-        path: /spec/template/spec/tolerations
-        value:
-          - key: app
-            operator: Equal
-            value: producao
-            effect: NoSchedule
-
   # Service
   - target:
       kind: Service
@@ -43,3 +29,6 @@ patches:
       - op: replace
         path: /spec/ports/0/nodePort
         value: 32644
+
+patchesStrategicMerge:
+  - patch-deployment.yaml
