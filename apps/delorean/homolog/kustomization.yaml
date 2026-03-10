@@ -13,7 +13,7 @@ replicas:
 images:
   - name: infrascielo/delorean
     newName: infrascielo/delorean
-    digest: sha256:df7d4d53e7f617cdee0faddf8e1064587cf206ef553187f58daebf35325f13a3
+    digest: sha256:d48c452388b4a08de750ed59e0d955e914cb0f41759657079b67b7d4a130bc62
 
 # JSON patch só para Service
 patches:
