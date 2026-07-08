@@ -15,7 +15,7 @@ replicas:
 images:
   - name: infrascielo/thesaurus
     newName: infrascielo/thesaurus
-    digest: sha256:1366df57338d15a6f292287b4b1b85e9f645a6d695ffbb72bd2f8566fcc2a36b
+    digest: sha256:5293a27a973d6528e822fd3dec20f198b802f6914f3e18d8d3bc160f6a52d205
 
 # JSON patch só para Service
 patches:
