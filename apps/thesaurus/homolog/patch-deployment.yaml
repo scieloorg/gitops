@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thesaurus
+
+spec:
+  template:
+    spec:
+      containers:
+      - name: webapp
+        envFrom:
+        - secretRef:
+            name: secrets-thesaurus
+
+      tolerations:
+      - key: app
+        operator: Equal
+        value: homologacao
+        effect: NoSchedule
