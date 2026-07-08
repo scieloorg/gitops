@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: thesaurus-svc
+  labels:
+    app: thesaurus
+
+spec:
+  type: NodePort
+
+  ports:
+    - name: webapp
+      port: 80
+      targetPort: 80
+      protocol: TCP
+
+  selector:
+    app: thesaurus
