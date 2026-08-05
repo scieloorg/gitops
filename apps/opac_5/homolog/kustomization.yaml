@@ -15,7 +15,7 @@ replicas:
 images:
   - name: infrascielo/opac_5
     newName: infrascielo/opac_5
-    digest: sha256:ec4b15e510004fa80daca91dc465e00c970741024bf1fe91f71689476c1d28a0
+    digest: sha256:f07372b7a4b847da55b283c62f47d03e643779b9ca6a809bc1e137654ecb5cf1
 
 # JSON patch só para Service
 patches:
